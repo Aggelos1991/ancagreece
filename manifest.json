@@ -1,0 +1,17 @@
+{
+  "name": "Aegean Summer Countdown",
+  "short_name": "Aegean",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0057B7",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
