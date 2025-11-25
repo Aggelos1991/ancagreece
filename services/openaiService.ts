@@ -1,8 +1,8 @@
-const apiKey = process.env.API_KEY || '';
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
 export const fetchGreekSummerFact = async (): Promise<string> => {
   if (!apiKey) {
-    return "Please configure your API_KEY to see AI-generated Greek facts!";
+    return "Please configure your VITE_OPENAI_API_KEY to see AI-generated Greek facts!";
   }
 
   try {
@@ -13,7 +13,7 @@ export const fetchGreekSummerFact = async (): Promise<string> => {
         "Authorization": `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -30,9 +30,9 @@ export const fetchGreekSummerFact = async (): Promise<string> => {
     });
 
     if (!response.ok) {
-       const errorData = await response.json().catch(() => ({}));
-       console.error("OpenAI API Error:", response.status, errorData);
-       throw new Error(`OpenAI API returned ${response.status}`);
+      const error = await response.json().catch(() => ({}));
+      console.error("OpenAI API Error:", response.status, error);
+      throw new Error("OpenAI API failed");
     }
 
     const data = await response.json();
