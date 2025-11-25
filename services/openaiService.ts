@@ -1,44 +1,28 @@
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-
 export const fetchGreekSummerFact = async (): Promise<string> => {
-  if (!apiKey) {
-    return "Please configure your VITE_OPENAI_API_KEY to see AI-generated Greek facts!";
-  }
-
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("/api/openai", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content: "You are a knowledgeable Greek guide. Provide a short, fascinating, and culturally rich fact about Greek Summer, the Aegean Sea, or Greek Islands. It should be one or two sentences max. Make it sound inviting and magical."
+            content:
+              "You are a knowledgeable Greek guide. Provide a short, fascinating, culturally rich Greek Summer fact."
           },
-          {
-            role: "user",
-            content: "Tell me a fact."
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 150
+          { role: "user", content: "Tell me a fact" }
+        ]
       })
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      console.error("OpenAI API Error:", response.status, error);
-      throw new Error("OpenAI API failed");
+      return "The Oracle is silent right now.";
     }
 
     const data = await response.json();
-    return data.choices?.[0]?.message?.content || "Greece is waiting for you!";
-  } catch (error) {
-    console.error("OpenAI Request Failed:", error);
-    return "The Oracle is silent right now. Check back later!";
+    return data.choices?.[0]?.message?.content ?? "Greece is waiting for you!";
+  } catch (err) {
+    return "The Oracle is silent right now.";
   }
 };
